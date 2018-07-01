@@ -1,0 +1,32 @@
+server: 
+ port: 8091
+ contextPath: /client
+
+spring: 
+  application:
+    name: client-server
+    
+security:
+  basic:
+    enabled: false #禁用http basic认证模式,如果启用默认用户名为user ,密码会在日志打印Using default security password: xxx
+  oauth2: 
+    client: 
+      clientId: clientId
+      clientSecret: client123456
+      accessTokenUri: http://127.0.0.1:8090/auth/oauth/token #授权服务端的tokenEnpoint会拦截该请求去生成token
+      userAuthorizationUri: http://127.0.0.1:8090/auth/oauth/authorize #授权服务端的AuthorizationEndpoint会拦截该请求去生成code并回调客户端配置的地址
+      preEstablishedRedirectUri: http://127.0.0.1:8091/client/sso/login # 客户端回调地址，请求授权码跟token会带上
+      registeredRedirectUri:  http://127.0.0.1:8091/client/sso/login # 客户端回调地址，请求授权码跟token会带上
+      useCurrentUri: false
+      scope: query
+    sso: 
+      loginPath: http://127.0.0.1:8091/client/sso/login # 客户端单点登陆的通知URL
+    resource: 
+      #id: resourceId 
+      #loadBalanced: true # 负载均衡
+      userInfoUri: http://127.0.0.1:8090/auth/me
+      preferTokenInfo: false 
+      
+logging: 
+  level: 
+    org.springframework.security: DEBUG
